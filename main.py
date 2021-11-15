@@ -17,7 +17,8 @@ import mysql.connector
 #%%
 
 DATABASE_LOCATION = ""
-USER_ID = "bartek_66" # your Spotify username 
+USER_ID = "" # your Spotify username 
+
 # Generate token here https://developer.spotify.com/console/get-recently-played/?limit=20&after=1484811043508&before=
 TOKEN = "" # insert token
 
@@ -56,7 +57,7 @@ if __name__ == "__main__":
     }  
         
 #converting yesterdays date unix millisecond timestamps
-#want to run this daily and see the songs we played in the last 24hrs 
+#checks for songs played in last 24 h
     
     today = datetime.datetime.now()
     yesterday = today - datetime.timedelta(days=1) 
@@ -103,6 +104,8 @@ if __name__ == "__main__":
 #Loading
 
 engine = create_engine(DATABASE_LOCATION)
+
+#construct cursor object
 
 db = mysql.connector.connect(  
   host="",
