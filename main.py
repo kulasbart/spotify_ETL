@@ -1,9 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Created on Tue Oct  5 11:05:16 2021
-@author: bartek
-"""
 
 from sqlalchemy import create_engine
 import pandas as pd 
@@ -18,7 +14,6 @@ import mysql.connector
 
 DATABASE_LOCATION = ""
 USER_ID = "" # your Spotify username 
-
 # Generate token here https://developer.spotify.com/console/get-recently-played/?limit=20&after=1484811043508&before=
 TOKEN = "" # insert token
 
@@ -47,35 +42,47 @@ def check_if_valid_data(df: pd.DataFrame) -> bool:
     # return True
 
 
-
+# use POST
+# basic auth header / header / body information
 if __name__ == "__main__":
 
+    username = ""
+    password = ""
+
     headers = {
-        "Accept" : "application/json",
-        "content-Type" : "application/json",
-        "Authorization" : "Bearer {token}".format(token=TOKEN)
-    }  
+        "Content-Type" : "application/x-www-form-urlencoded"
+    }
+
+    body = {
+        "grant_type": "authorization_code",
+        "code": "AQBB9hq4vPoiQJsNzzHLeVvr1AmNxn3OBizhCNtLWtv34sNr17x7_Dbbzt0umoybHCrjFsvZkyDs9BRTEx9Z2OrtrFtKcMSOrdczwCpyfe6gPDgdNF4tyU8NuV-Vo9KK7JZUoZu0pPXi75z1wQWnQtPFTP0xq6_woHL5GQQR2FDDKU8k6T3mFff_UPWte4dkDzKcTw",
+        "redirect_uri": "http://localhost:8080"
+    }
         
-#converting yesterdays date unix millisecond timestamps
-#checks for songs played in last 24 h
-    
+    # converting yesterdays date unix millisecond timestamps
+    # checks for songs played in last 24 h
     today = datetime.datetime.now()
     yesterday = today - datetime.timedelta(days=1) 
     yesterday_unix_timestamp = int(yesterday.timestamp()) * 1000
+     
+    post = requests.post('https://accounts.spotify.com/api/token', auth=(username, password), headers=headers, data=body).json()
+    print(post)
 
-    # Download all songs you've listened to "after yesterday", which means in the last 24 hours      
-    r = requests.get("https://api.spotify.com/v1/me/player/recently-played?after={time}".format(time=yesterday_unix_timestamp), headers = headers)
-    
+    # request
+    token = post["access_token"]
+    url = 'https://api.spotify.com/v1/me/player/recently-played'
+    r = requests.get(url, headers={"Authorization": f"Bearer {token}"})
+
     data = r.json()
+    print(data)
 
     song_names = []
     artist_names = []
     played_at_list = []
     timestamps = []
 
-    
+
 # Extracting only the relevant bits of data from the json object 
-     
     for song in data["items"]:
         song_names.append(song["track"]["name"])
         artist_names.append(song["track"]["album"]["artists"][0]["name"])
@@ -92,6 +99,8 @@ if __name__ == "__main__":
     }
 
     song_df = pd.DataFrame(song_dict, columns = ["song_name", "song_artist", "played_at", "time_stamp"])
+
+    print(song_df)
 
 #%%  
 #Validate
@@ -130,17 +139,3 @@ except Exception as e:
     
 db.close()
 print("Database closed successfully")
-
-
-
-
-
-
-
-
-
-
-
-
-        
-        
