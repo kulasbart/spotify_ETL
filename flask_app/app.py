@@ -4,6 +4,7 @@ import pandas as pd
 import json
 from datetime import datetime
 import datetime
+import spot
 
 app = Flask(__name__)
 
@@ -24,32 +25,6 @@ def check_validity(df: pd.DataFrame) -> bool:
     #Check that all timestamps are of yesterday's date
     yesterday = datetime.datetime.now() - datetime.timedelta(days=1)
     yesterday = yesterday.replace(hour=0, minute=0, second=0, microsecond=0)
-
-# def load(db_config):
-
-#     engine = create_engine(DATABASE_LOCATION)
-
-#     db = mysql.connector.connect(  
-#     host = db_config"",
-#     use r= db_config"",
-#     password = db_config"",
-#     database = db_config""
-#     )
-
-#     print(db)
-#     mycursor = db.cursor()
-#     #create table skeleton with cursor
-#     mycursor.execute("CREATE TABLE my_songs (song_name VARCHAR(200), song_artist VARCHAR(200), played_at VARCHAR(200), time_stamp VARCHAR(200))")
-
-#     try:
-#         song_df.to_sql("my_songs", engine, index=False, if_exists='append')
-#     except Exception as e:
-#         print(e)
-#         print("Data already exists in database")
-        
-#     db.close()
-#     print("Database closed successfully")
-
 
 def getRecentlyPlayed(code):
     username = "e7a487ef0197464391738e0504a7bf9b"
