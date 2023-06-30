@@ -1,0 +1,8 @@
+{   
+    "DB_LOCATION": "spotify_API",
+    "host": "127.0.0.1",
+    "port": 3306,
+    "auth_source": "admin",
+    "user": "root",
+    "password": "panda123"
+}

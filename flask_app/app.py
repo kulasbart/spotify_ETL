@@ -4,7 +4,7 @@ import pandas as pd
 import json
 from datetime import datetime
 import datetime
-import spot
+import spotify_helpers
 
 app = Flask(__name__)
 

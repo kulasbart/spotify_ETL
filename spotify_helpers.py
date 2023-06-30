@@ -69,27 +69,30 @@ def getRecentlyPlayed(code):
 
     return songs_df, 200
 
-# def load(db_config):
+def load(db_config):
 
-#     engine = create_engine(DATABASE_LOCATION)
+    with open('data/db_config.json', 'r') as f:
+        db_config = json.load(f)
 
-#     db = mysql.connector.connect(  
-#     host = db_config"",
-#     use r= db_config"",
-#     password = db_config"",
-#     database = db_config""
-#     )
+    engine = create_engine(DATABASE_LOCATION)
 
-#     print(db)
-#     mycursor = db.cursor()
-#     #create table skeleton with cursor
-#     mycursor.execute("CREATE TABLE my_songs (song_name VARCHAR(200), song_artist VARCHAR(200), played_at VARCHAR(200), time_stamp VARCHAR(200))")
+    db = mysql.connector.connect(
+        host = db_config"",
+        user= db_config"",
+        password = db_config"",
+        database = db_config""
+    )
 
-#     try:
-#         song_df.to_sql("my_songs", engine, index=False, if_exists='append')
-#     except Exception as e:
-#         print(e)
-#         print("Data already exists in database")
+    print(db)
+    mycursor = db.cursor()
+    #create table skeleton with cursor
+    mycursor.execute("CREATE TABLE my_songs (song_name VARCHAR(200), song_artist VARCHAR(200), played_at VARCHAR(200), time_stamp VARCHAR(200))")
+
+    try:
+        song_df.to_sql("my_songs", engine, index=False, if_exists='append')
+    except Exception as e:
+        print(e)
+        print("Data already exists in database")
         
-#     db.close()
-#     print("Database closed successfully")
+    db.close()
+    print("Database closed successfully")
