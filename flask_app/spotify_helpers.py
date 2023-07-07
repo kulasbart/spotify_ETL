@@ -75,8 +75,8 @@ def loadDatabase(song_df, db_config='../db/db_config.json'):
     with open(db_config, 'r') as f:
         db_config = json.load(f)
 
-    # enter db location
-    database_location = 'mysql+mysqlconnector://<username>:<password>@<host>:<port>/<database>'
+    # enter db location: 'mysql+mysqlconnector://<username>:<password>@<host>:<port>/<database>'
+    database_location = 'mysql+mysqlconnector://root:panda123@127.0.0.1:3306/recently_played'
     engine = create_engine(database_location)
 
     db = mysql.connector.connect(
@@ -90,7 +90,12 @@ def loadDatabase(song_df, db_config='../db/db_config.json'):
     cursor = db.cursor()
 
     #create table skeleton with cursor
-    cursor.execute("CREATE TABLE recently_played_songs (song_name VARCHAR(200), song_artist VARCHAR(200), played_at VARCHAR(200), time_stamp VARCHAR(200))")
+    try:
+        cursor.execute(f"CREATE TABLE recently_played_songs (song_name VARCHAR(200), song_artist VARCHAR(200), played_at VARCHAR(200), time_stamp VARCHAR(200))")
+        print('Created table: recently_played_songs')
+    except:
+        print('Table already exists: recently_played_songs')
+        pass
 
     try:
         song_df.to_sql("recently_played_songs", engine, index=False, if_exists='append')
